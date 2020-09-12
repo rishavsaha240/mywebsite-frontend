@@ -194,7 +194,7 @@
       <div class="container">
         <p id="section-tag">Contact me</p>
         <div class="underline-contact"></div>
-        <form method="post">
+        <form method="post" @submit.prevent="contact_form_submit">
           <div class="text-center" style="padding-bottom: 2rem;">
             <input
               type="text"
@@ -249,7 +249,9 @@ export default {
   components: {},
   data() {
     return {
-      api_url: "http://localhost:3000/education-details",
+      api_education_details: "http://localhost:3000/education-details",
+      api_contact_form_data:
+        "http://localhost:3000/submit-contact-form-details",
       education_details: [],
       name: "",
       email: "",
@@ -259,10 +261,10 @@ export default {
   },
   methods: {
     get_education_details() {
-      fetch(this.api_url, {
+      fetch(this.api_education_details, {
         method: "GET",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
         },
       })
         .then((resp) => {
@@ -270,6 +272,30 @@ export default {
         })
         .then((resp) => {
           this.education_details = resp.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    contact_form_submit() {
+      const data = {
+        name: this.name,
+        email: this.email,
+        subject: this.subject,
+        message: this.subject,
+      };
+      fetch(this.api_contact_form_data, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resp) => {
+          return resp.json();
+        })
+        .then((resp) => {
+          console.log(resp);
         })
         .catch((err) => {
           console.log(err);
